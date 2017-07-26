@@ -1,0 +1,41 @@
+{
+  "name": "node-make-starter",
+  "version": "1.0.0",
+  "author": "dead-beef",
+  "license": "MIT",
+  "private": true,
+  "description": "Front-end starter kit based on NodeJS and Make",
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dead-beef/node-make-starter"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "material-design-icons-iconfont": "^3.0.3",
+    "materialize-css": "^0.99.0"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^1.2.0",
+    "csso-cli": "^1.0.0",
+    "eslint": "^4.2.0",
+    "jasmine-core": "^2.6.4",
+    "jasmine-jquery": "^2.1.1",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-spec-reporter": "0.0.31",
+    "node-sass": "^4.5.3",
+    "packpath": "^0.1.0",
+    "root-require": "^0.3.1",
+    "uglify-js": "^3.0.25"
+  },
+  "scripts": {
+    "test": "TEST_BUNDLE= karma start config/karma.conf.js --single-run",
+    "test:bundle": "TEST_BUNDLE=1 karma start config/karma.conf.js --single-run",
+    "test:watch": "TEST_BUNDLE= karma start config/karma.conf.js",
+    "test:watch:bundle": "TEST_BUNDLE=1 karma start config/karma.conf.js",
+    "lint": "eslint src tests"
+  }
+}
