@@ -38,57 +38,26 @@ make
 ```
 
 ## Building
-
-Continuous
-
-```
-make watch
-```
-
-Single run
-
-```
+```bash
+# single run
 make
-```
-
-### Minification
-
-Continuous
-
-```
+# continuous
+make watch
+# single run, minify
+make min
+# continuous, minify
 make watch-min
 ```
 
-Single run
-
-```
-make min
-```
-
 ## Testing
-
-### Unit
-
-Continuous
-
-```
+```bash
+# unit, single run
+make test
+make test-bundle
+# unit, continuous
 make test-watch
-```
-
-```
 make test-watch-bundle
 ```
-
-Single run
-
-```
-make test
-```
-
-```
-make test-bundle
-```
-
 ## Code Linting
 
 ```
