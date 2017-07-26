@@ -1,8 +1,8 @@
 MV = mv -f
 RM = rm -rfv
 CP = cp -f
-CPDIST = cp -f
-#CPDIST = ln -f
+#CPDIST = cp -f
+CPDIST = ln -f
 MKDIR = mkdir -p
 ECHO = echo
 CAT = cat
