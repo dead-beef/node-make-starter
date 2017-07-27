@@ -198,7 +198,7 @@ else ifeq "$(CSS_TYPE)" ""
 
 ifneq "$(strip $(LIB_CSS))" ""
 $(LIB_CSS): $(LIB_CSS_FILES) | $(BUILD_DIR)
-	$(call prefix,[lib-css]  ,xargs -a $^ cat >$@.tmp)
+	$(call prefix,[lib-css]  ,$(CAT) $^ >$@.tmp)
 	$(call prefix,[lib-css]  ,$(MV) $@.tmp $@)
 endif
 
