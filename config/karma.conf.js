@@ -27,6 +27,14 @@ module.exports = (config) => {
 
 	files.push('./tests/**/*.test.js');
 
+	let browsers = process.env.TEST_BROWSERS;
+	if(!browsers) {
+		browsers = ['Chromium'];
+	}
+	else {
+		browsers = browsers.split(/\s+/);
+	}
+
 	config.set({
 		basePath: '../',
 
@@ -53,6 +61,6 @@ module.exports = (config) => {
 		autoWatch: true,
 		singleRun: false,
 
-		browsers: ['Chromium']
+		browsers: browsers
 	});
 };

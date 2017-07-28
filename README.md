@@ -53,10 +53,12 @@ make watch-min
 ```bash
 # unit, single run
 make test
-make test-bundle
 # unit, continuous
 make test-watch
-make test-watch-bundle
+# test application bundle
+TEST_BUNDLE=1 make test
+# select browsers (default: Chromium)
+TEST_BROWSERS="Firefox Chrome PhantomJS" make test
 ```
 ## Code Linting
 
