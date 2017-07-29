@@ -9,8 +9,9 @@ MIN_DIR := $(BUILD_DIR)/min
 DIST_DIR = dist
 
 LIB_NAME = vendor
-LIB_FONT_DIRS := node_modules/materialize-css/dist/fonts/ \
-                 node_modules/material-design-icons-iconfont/dist/fonts/
+LIB_FONT_DIRS := node_modules/material-design-icons-iconfont/dist/fonts \
+                 node_modules/materialize-css/dist/fonts/roboto
+LIB_FONT_DIST_DIRS := material-icons roboto
 LIB_FONT_TYPES = %.otf %.eot %.svg %.ttf %.woff %.woff2
 
 HTML_DIRS =

@@ -26,12 +26,25 @@ define rwildcards
 	$(foreach d,$(sort $(wildcard $1*)),$(call rwildcards,$d/,$2))
 endef
 
+define make-copy-target
+$(strip $1): $(strip $3)/%: $(strip $2)/%
+	$$(call prefix,[copy]     ,$(MKDIR) $$(@D))
+	$$(call prefix,[copy]     ,$(CP) $$< $$@)
+endef
+
+define make-font-target
+$(eval srcdst := $(subst -->, ,$1))
+$(eval src := $(firstword $(srcdst)))
+$(eval dst := $(lastword $(srcdst)))
+$(eval files := $(call rwildcards,$(src)/,$(LIB_FONT_TYPES_WILDCARD)))
+$(eval distfiles := \
+    $(foreach f,$(files),$(patsubst $(src)%,$(APP_OUT_FONT_DIR)/$(dst)%,$f)))
+$(eval LIB_FONTS += $(files))
+$(eval BUILD_FONTS += $(distfiles))
+$(call make-copy-target,$(distfiles),$(src),$(APP_OUT_FONT_DIR)/$(dst))
+endef
+
 define prefix
 	@$(ECHO) "  $1 $(strip $(subst $$,\\$$,$(subst $(QUOTE),$(QUOTE2),$(2))))"
 	@$(2)
-endef
-
-define link-module-dir
-	$(call join-with,/,$(patsubst %,..,$(subst /,$(SPACE),$(dir $1))) \
-	                   $(notdir $1))
 endef

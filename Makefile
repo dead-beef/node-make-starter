@@ -27,6 +27,13 @@ VARS_FILE := $(BUILD_DIR)/vars.mk
 
 #--------
 
+APP_OUT_JS_DIR := $(DIST_DIR)/js
+APP_OUT_CSS_DIR := $(DIST_DIR)/css
+APP_OUT_HTML_DIR := $(DIST_DIR)/tmpl
+APP_OUT_FONT_DIR := $(DIST_DIR)/fonts
+APP_OUT_DIRS := $(APP_OUT_JS_DIR) $(APP_OUT_CSS_DIR) \
+                $(APP_OUT_FONT_DIR) $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
+
 MAKEFILES := Makefile $(VARS_FILE) $(wildcard config/*.mk);
 
 JS_FILES := $(call uniq,$(JS_FILES))
@@ -54,14 +61,17 @@ COPY_FILES := $(COPY_FILES) \
               $(foreach d,$(COPY_DIRS),\
                           $(call rwildcards,$d/,$(COPY_FILE_TYPES_WILDCARD)))
 
-WATCH_FILES := '$(APP_DIR)/**/*.*' 'config/*.*' Makefile package.json
+WATCH_FILES := '$(APP_DIR)/**/*' 'config/*' Makefile package.json
 
-APP_OUT_JS_DIR := $(DIST_DIR)/js
-APP_OUT_CSS_DIR := $(DIST_DIR)/css
-APP_OUT_FONT_DIR := $(DIST_DIR)/fonts
-#APP_OUT_IMG_DIR := $(DIST_DIR)/img
-APP_OUT_DIRS := $(APP_OUT_JS_DIR) $(APP_OUT_CSS_DIR) \
-                $(APP_OUT_FONT_DIR) $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
+LIB_FONT_TYPES_WILDCARD := $(subst %,*,$(LIB_FONT_TYPES))
+LIB_FONTS :=
+BUILD_FONTS :=
+
+$(foreach \
+    dirs,\
+    $(join $(LIB_FONT_DIRS),$(addprefix -->,$(LIB_FONT_DIST_DIRS))),\
+    $(eval $(call make-font-target,$(dirs)))\
+)
 
 ifneq "$(strip $(LIB_JS_FILES))" ""
 LIB_JS := $(BUILD_DIR)/$(LIB_NAME).js
@@ -74,10 +84,6 @@ LIB_CSS := $(BUILD_DIR)/$(LIB_NAME).css
 else
 LIB_CSS =
 endif
-
-LIB_FONT_TYPES_WILDCARD := $(subst %,*,$(LIB_FONT_TYPES))
-LIB_FONTS := $(LIB_FONTS) $(foreach d,$(LIB_FONT_DIRS),\
-                            $(call rwildcards,$d/,$(LIB_FONT_TYPES_WILDCARD)))
 
 ifneq "$(strip $(JS_FILES))" ""
 APP_JS := $(BUILD_DIR)/$(APP_NAME).js
@@ -98,7 +104,6 @@ BUILD_FILES := $(LIB_JS) $(LIB_CSS) $(APP_JS) $(APP_CSS)
 endif
 
 BUILD_FILES_MIN := $(BUILD_FILES:$(BUILD_DIR)%=$(MIN_DIR)%)
-BUILD_FONTS := $(foreach p,$(LIB_FONTS),$(APP_OUT_FONT_DIR)/$(notdir $p))
 BUILD_COPY := $(foreach p,$(COPY_FILES),$(p:$(APP_DIR)%=$(DIST_DIR)%))
 BUILD_COPY_ALL := $(BUILD_FONTS) $(BUILD_COPY)
 
@@ -231,12 +236,7 @@ $(APP_JS):: $(JS_FILES) | $(BUILD_DIR)
 
 endif
 
-$(BUILD_COPY): $(DIST_DIR)/%: $(APP_DIR)/%
-	$(call prefix,[copy]     ,$(MKDIR) $(@D))
-	$(call prefix,[copy]     ,$(CP) $< $@)
-
-$(BUILD_FONTS): $(LIB_FONTS) package.json | $(APP_OUT_FONT_DIR) ##
-	$(call prefix,[fonts]    ,$(CP) $(LIB_FONTS) $(APP_OUT_FONT_DIR))
+$(eval $(call make-copy-target,$(BUILD_COPY),$(APP_DIR),$(DIST_DIR)))
 
 #--------
 
