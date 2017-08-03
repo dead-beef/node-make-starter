@@ -28,11 +28,11 @@ module.exports = (config) => {
 	files.push('./tests/**/*.test.js');
 
 	let browsers = process.env.TEST_BROWSERS;
-	if(!browsers) {
-		browsers = ['Chromium'];
-	}
-	else {
+	if(browsers) {
 		browsers = browsers.split(/\s+/);
+	}
+	if(!(browsers && browsers[0])) {
+		browsers = ['Chromium'];
 	}
 
 	config.set({
