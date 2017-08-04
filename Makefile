@@ -142,10 +142,12 @@ rebuild-min: clean min
 clean:
 	$(call prefix,[clean]    ,$(RM) $(BUILD_DIR)/* $(DIST_DIR)/*)
 
-watch: all
+watch:
+	$(call prefix,[build]    ,-$(RESET_MAKE))
 	$(call prefix,[watch]    ,$(WATCH) '$(RESET_MAKE)')
 
-watch-min: min
+watch-min:
+	$(call prefix,[build]    ,-$(RESET_MAKE) min)
 	$(call prefix,[watch]    ,$(WATCH) '$(RESET_MAKE) min')
 
 install::
