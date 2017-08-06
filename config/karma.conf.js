@@ -20,7 +20,7 @@ module.exports = (config) => {
 	}
 	else {
 		files.push.apply(files, [
-			'./tests/test_start.js',
+			'./tests/test-start.js',
 			'./src/js/**/*.js'
 		]);
 	}

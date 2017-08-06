@@ -9,7 +9,7 @@ LINT = eslint
 MINJS = uglifyjs
 MINCSS = csso
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
-MAKE_VARS = config/make_vars.js
+MAKE_VARS = config/make-vars.js
 MAKE_VARS_CMD := node $(MAKE_VARS)
 
 LINT_ENABLED = 1
