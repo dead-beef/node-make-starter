@@ -38,6 +38,7 @@ MAKEFILES := Makefile $(VARS_FILE) $(wildcard config/*.mk);
 
 JS_FILES := $(call uniq,$(JS_FILES))
 JS_FILES := $(filter-out $(JS_IGNORE),$(JS_FILES))
+JS_FILES := $(APP_DIR)/umd/umd-start.js $(JS_FILES) $(APP_DIR)/umd/umd-end.js
 
 ifeq "$(strip $(CSS_TYPE))" "css"
 	CSS_TYPE =

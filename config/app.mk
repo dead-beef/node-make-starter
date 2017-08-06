@@ -20,9 +20,7 @@ HTML_FILES =
 JS_DIRS := $(APP_DIR)/js
 JS_IGNORE = %.test.js
 
-JS_FILES := $(APP_DIR)/umd/umd-start.js
-JS_FILES += $(foreach d,$(JS_DIRS),$(call rwildcard,$d/,*.js))
-JS_FILES += $(APP_DIR)/umd/umd-end.js
+JS_FILES := $(foreach d,$(JS_DIRS),$(call rwildcard,$d/,*.js))
 
 CSS_TYPE = scss
 CSS_DIRS = $(APP_DIR)/css
