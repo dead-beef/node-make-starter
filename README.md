@@ -58,12 +58,20 @@ make test-watch
 # test application bundle
 TEST_BUNDLE=1 make test
 # select browsers (default: Chromium)
-TEST_BROWSERS="Firefox Chrome PhantomJS" make test
+TEST_BROWSERS="Firefox Chrome" make test
 ```
 ## Code Linting
 
 ```
 make lint
+```
+
+## Server
+
+```bash
+make start
+make SERVER_IP=192.168.1.10 SERVER_PORT=1080 start
+make stop
 ```
 
 ## Licenses

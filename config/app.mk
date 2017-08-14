@@ -32,3 +32,6 @@ COPY_DIRS := $(APP_DIR)
 COPY_FILE_TYPES = %.jpg %.jpe %.jpeg %.png %.gif %.svg %.ico %.html
 
 NPM_SCRIPTS =
+
+SERVER_IP := 127.0.0.1
+SERVER_PORT := 57005

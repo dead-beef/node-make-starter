@@ -12,6 +12,9 @@ WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
 MAKE_VARS = config/make-vars.js
 MAKE_VARS_CMD := node $(MAKE_VARS)
 
+START = http-server -a $(SERVER_IP) -p $(SERVER_PORT) -c-1 $(DIST_DIR)
+STOP = pkill -f http-server
+
 LINT_ENABLED = 1
 LIBRARY =
 
@@ -116,7 +119,7 @@ VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
        CSS_INCLUDE_PATH DIST_FILES WATCH_FILES \
        TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
 
-TARGETS = all min watch watch-min rebuild clean install vars help
+TARGETS = all min watch watch-min start stop rebuild clean install vars help
 TEST_TARGETS := $(filter test%,$(TARGETS) $(NPM_SCRIPTS))
 
 LIST_TARGETS := $(addprefix print-,$(TARGETS))
@@ -153,6 +156,12 @@ watch-min:
 
 install::
 	$(call prefix,[install]  ,npm install)
+
+start: stop
+	$(call prefix,[start]    ,$(START))
+
+stop:
+	$(call prefix,[stop]     ,-$(STOP))
 
 $(NPM_SCRIPTS):
 	npm run $(subst -,:,$@) --silent
