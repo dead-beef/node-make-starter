@@ -39,14 +39,14 @@ APP_OUT_JS_DIR := $(DIST_DIR)/js
 APP_OUT_CSS_DIR := $(DIST_DIR)/css
 APP_OUT_HTML_DIR := $(DIST_DIR)/tmpl
 APP_OUT_FONT_DIR := $(DIST_DIR)/fonts
-APP_OUT_DIRS := $(APP_OUT_JS_DIR) $(APP_OUT_CSS_DIR) \
-                $(APP_OUT_FONT_DIR) $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
 
 MAKEFILES := Makefile $(VARS_FILE) $(wildcard config/*.mk);
 
 JS_FILES := $(call uniq,$(JS_FILES))
 JS_FILES := $(filter-out $(JS_IGNORE),$(JS_FILES))
+ifneq "$(strip $(JS_FILES))" ""
 JS_FILES := $(APP_DIR)/umd/umd-start.js $(JS_FILES) $(APP_DIR)/umd/umd-end.js
+endif
 
 ifeq "$(strip $(CSS_TYPE))" "css"
 	CSS_TYPE =
@@ -63,8 +63,6 @@ CSS_DEPS := $(CSS_FILES) $(foreach d,$(CSS_DIRS),\
 CSS_DEPS := $(filter-out $(LIB_CSS_FILES) $(LIB_CSS_DEPS),$(CSS_DEPS))
 CSS_INCLUDE_PATH := $(call join-with,:,$(CSS_DIRS) node_modules)
 endif
-
-WATCH_FILES := '$(APP_DIR)/**/*' 'config/*' Makefile package.json
 
 LIB_FONT_TYPES_WILDCARD := $(subst %,*,$(LIB_FONT_TYPES))
 LIB_FONTS :=
@@ -112,11 +110,30 @@ BUILD_COPY_ALL := $(BUILD_FONTS) $(BUILD_COPY)
 
 DIST_FILES:= $(BUILD_FILES:$(BUILD_DIR)%=$(DIST_DIR)%)
 
+WATCH_FILES := '$(APP_DIR)/**/*' 'config/*' Makefile package.json
+
+APP_OUT_DIRS := $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
+
+ifneq "$(strip $(filter %.js,$(DIST_FILES)))" ""
+APP_OUT_DIRS += $(APP_OUT_JS_DIR)
+endif
+
+ifneq "$(strip $(filter %.css,$(DIST_FILES)))" ""
+APP_OUT_DIRS += $(APP_OUT_CSS_DIR)
+endif
+
+ifeq "$(strip $(LIBRARY))" ""
+ifneq "$(strip $(LIB_FONTS))" ""
+APP_OUT_DIRS += $(APP_OUT_FONT_DIR)
+endif
+endif
+
 VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
        LIB_FONTS JS_FILES CSS_FILES CSS_DEPS APP_JS APP_CSS \
        COPY_FILES BUILD_FILES BUILD_FILES_MIN BUILD_FONTS BUILD_COPY \
        CSS_INCLUDE_PATH DIST_FILES WATCH_FILES \
-       TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
+       TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS \
+       APP_OUT_DIRS VARS_FILE
 
 TARGETS = all min watch min-watch start stop rebuild clean \
           test test-watch test-e2e test-all install vars help
@@ -136,8 +153,12 @@ all: $(BUILD_FILES)
 min: $(BUILD_FILES_MIN)
 
 all min: $(BUILD_COPY_ALL) | $(APP_OUT_DIRS)
+ifneq "$(strip $(APP_JS))" ""
 	$(call prefix,[dist]     ,$(CPDIST) $(filter %.js,$^) $(APP_OUT_JS_DIR))
+endif
+ifneq "$(strip $(APP_CSS))" ""
 	$(call prefix,[dist]     ,$(CPDIST) $(filter %.css,$^) $(APP_OUT_CSS_DIR))
+endif
 
 rebuild: clean all
 
@@ -247,16 +268,12 @@ $(LIB_JS): $(LIB_JS_FILES) | $(BUILD_DIR)
 endif
 
 ifneq "$(strip $(APP_JS))" ""
-
+$(APP_JS): $(JS_FILES) | $(BUILD_DIR)
 ifneq "$(strip $(LINT_ENABLED))" ""
-$(APP_JS):: $(JS_FILES)
 	$(call prefix,[js-lint]  ,$(LINT) $?)
 endif
-
-$(APP_JS):: $(JS_FILES) | $(BUILD_DIR)
 	$(call prefix,[js-cat]   ,$(CAT) $^ >$@.tmp)
 	$(call prefix,[js-cat]   ,$(MV) $@.tmp $@)
-
 endif
 
 $(eval $(call make-copy-target,$(BUILD_COPY),$(APP_DIR),$(DIST_DIR)))
