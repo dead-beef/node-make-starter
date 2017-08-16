@@ -46,7 +46,7 @@ make watch
 # single run, minify
 make min
 # continuous, minify
-make watch-min
+make min-watch
 ```
 
 ## Testing

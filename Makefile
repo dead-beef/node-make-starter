@@ -124,7 +124,7 @@ VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
        CSS_INCLUDE_PATH DIST_FILES WATCH_FILES \
        TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
 
-TARGETS = all min watch watch-min start stop rebuild clean \
+TARGETS = all min watch min-watch start stop rebuild clean \
           test test-watch test-e2e test-all install vars help
 TEST_TARGETS := $(filter test%,$(TARGETS) $(NPM_SCRIPTS))
 
@@ -156,7 +156,7 @@ watch:
 	$(call prefix,[build]    ,-$(RESET_MAKE))
 	$(call prefix,[watch]    ,$(WATCH) '$(RESET_MAKE)')
 
-watch-min:
+min-watch:
 	$(call prefix,[build]    ,-$(RESET_MAKE) min)
 	$(call prefix,[watch]    ,$(WATCH) '$(RESET_MAKE) min')
 
