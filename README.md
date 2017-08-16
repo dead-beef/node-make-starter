@@ -60,6 +60,7 @@ TEST_BUNDLE=1 make test
 # select browsers (default: Chromium)
 TEST_BROWSERS="Firefox Chrome" make test
 ```
+
 ## Code Linting
 
 ```
