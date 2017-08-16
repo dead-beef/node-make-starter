@@ -9,11 +9,16 @@ LINT = eslint
 MINJS = uglifyjs
 MINCSS = csso
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
-MAKE_VARS = config/make-vars.js
-MAKE_VARS_CMD := node $(MAKE_VARS)
 
 START = http-server -a $(SERVER_IP) -p $(SERVER_PORT) -c-1 $(DIST_DIR)
 STOP = pkill -f http-server
+
+TEST = karma start config/karma.conf.js --single-run
+TEST_WATCH = karma start config/karma.conf.js
+TEST_E2E = ./e2e-test
+
+MAKE_VARS = config/make-vars.js
+MAKE_VARS_CMD := node $(MAKE_VARS)
 
 LINT_ENABLED = 1
 LIBRARY =
@@ -119,7 +124,8 @@ VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
        CSS_INCLUDE_PATH DIST_FILES WATCH_FILES \
        TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
 
-TARGETS = all min watch watch-min start stop rebuild clean install vars help
+TARGETS = all min watch watch-min start stop rebuild clean \
+          test test-watch test-e2e test-all install vars help
 TEST_TARGETS := $(filter test%,$(TARGETS) $(NPM_SCRIPTS))
 
 LIST_TARGETS := $(addprefix print-,$(TARGETS))
@@ -162,6 +168,17 @@ start: stop
 
 stop:
 	$(call prefix,[stop]     ,-$(STOP))
+
+test:
+	$(call prefix,[test]     ,$(TEST))
+
+test-watch:
+	$(call prefix,[test]     ,$(TEST_WATCH))
+
+test-e2e:
+	$(call prefix,[test]     ,$(TEST_E2E))
+
+test-all: test test-e2e
 
 $(NPM_SCRIPTS):
 	npm run $(subst -,:,$@) --silent

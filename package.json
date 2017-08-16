@@ -33,10 +33,6 @@
     "uglify-js": "^3.0.25"
   },
   "scripts": {
-    "test": "karma start config/karma.conf.js --single-run",
-    "test:bundle": "TEST_BUNDLE=1 karma start config/karma.conf.js --single-run",
-    "test:watch": "karma start config/karma.conf.js",
-    "test:watch:bundle": "TEST_BUNDLE=1 karma start config/karma.conf.js",
     "lint": "eslint src tests"
   }
 }
