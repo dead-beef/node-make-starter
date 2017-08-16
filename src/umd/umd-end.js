@@ -1,1 +1,1 @@
-}));})(this);
+return exports;});
