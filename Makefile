@@ -293,6 +293,6 @@ include config/deps.mk
 #--------
 
 $(VARS):
-	@$(ECHO) $@ = $($@)
+	@$(ECHO) "  " $@ = $($@)
 
 vars: $(VARS)
