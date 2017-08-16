@@ -64,12 +64,6 @@ CSS_DEPS := $(filter-out $(LIB_CSS_FILES) $(LIB_CSS_DEPS),$(CSS_DEPS))
 CSS_INCLUDE_PATH := $(call join-with,:,$(CSS_DIRS) node_modules)
 endif
 
-COPY_FILE_TYPES_WILDCARD := $(subst %,*,$(COPY_FILE_TYPES))
-
-COPY_FILES := $(COPY_FILES) \
-              $(foreach d,$(COPY_DIRS),\
-                          $(call rwildcards,$d/,$(COPY_FILE_TYPES_WILDCARD)))
-
 WATCH_FILES := '$(APP_DIR)/**/*' 'config/*' Makefile package.json
 
 LIB_FONT_TYPES_WILDCARD := $(subst %,*,$(LIB_FONT_TYPES))

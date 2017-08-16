@@ -30,6 +30,11 @@ LIB_CSS_DEPS := $(APP_DIR)/css/_materialize.scss
 
 COPY_DIRS := $(APP_DIR)
 COPY_FILE_TYPES = %.jpg %.jpe %.jpeg %.png %.gif %.svg %.ico %.html
+COPY_FILE_TYPES_WILDCARD := $(subst %,*,$(COPY_FILE_TYPES))
+
+COPY_FILES :=
+COPY_FILES += $(foreach d,$(COPY_DIRS),\
+                          $(call rwildcards,$d/,$(COPY_FILE_TYPES_WILDCARD)))
 
 NPM_SCRIPTS =
 
