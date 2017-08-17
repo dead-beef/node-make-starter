@@ -160,9 +160,11 @@ ifneq "$(strip $(APP_CSS))" ""
 	$(call prefix,[dist]     ,$(CPDIST) $(filter %.css,$^) $(APP_OUT_CSS_DIR))
 endif
 
-rebuild: clean all
+rebuild: clean
+	$(RESET_MAKE)
 
-rebuild-min: clean min
+rebuild-min: clean
+	$(RESET_MAKE) min
 
 clean:
 	$(call prefix,[clean]    ,$(RM) $(BUILD_DIR)/* $(DIST_DIR)/*)
