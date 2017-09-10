@@ -8,6 +8,7 @@ SASS = node-sass --include-path $(CSS_INCLUDE_PATH)
 LINT = eslint
 MINJS = uglifyjs
 MINCSS = csso
+MINHTML = html-minifier -c config/html-minifier.conf.json
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
 
 START = http-server -a $(SERVER_IP) -p $(SERVER_PORT) -c-1 $(DIST_DIR)
@@ -98,21 +99,41 @@ else
 APP_CSS =
 endif
 
-ifneq "$(strip $(LIBRARY))" ""
-BUILD_FILES := $(APP_JS) $(APP_CSS)
-else
-BUILD_FILES := $(LIB_JS) $(LIB_CSS) $(APP_JS) $(APP_CSS)
-endif
+LIB_MIN_JS := $(LIB_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
+LIB_MIN_CSS := $(LIB_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
+APP_MIN_JS := $(APP_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
+APP_MIN_CSS := $(APP_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
 
-BUILD_FILES_MIN := $(BUILD_FILES:$(BUILD_DIR)%=$(MIN_DIR)%)
+COPY_JS_FILES := $(filter %.js,$(COPY_FILES))
+COPY_CSS_FILES := $(filter %.css,$(COPY_FILES))
+COPY_HTML_FILES := $(filter %.html,$(COPY_FILES))
+COPY_FILES := $(filter-out %.js %.css %.html,$(COPY_FILES))
+
 BUILD_COPY := $(COPY_FILES:$(APP_DIR)%=$(DIST_DIR)%)
-BUILD_COPY_ALL := $(BUILD_FONTS) $(BUILD_COPY)
+BUILD_COPY_JS := $(COPY_JS_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
+BUILD_COPY_CSS := $(COPY_CSS_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
+BUILD_COPY_HTML := $(COPY_HTML_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
+BUILD_COPY_DIST := $(BUILD_COPY_JS) $(BUILD_COPY_CSS) $(BUILD_COPY_HTML)
+BUILD_COPY_DIST_MIN := $(BUILD_COPY_DIST:$(BUILD_DIR)%=$(MIN_DIR)%)
+BUILD_COPY_ALL := $(BUILD_FONTS) $(BUILD_COPY) $(BUILD_COPY_DIST)
 
+BUILD_FILES := $(BUILD_COPY_DIST)
+ifneq "$(strip $(LIBRARY))" ""
+BUILD_FILES += $(APP_JS) $(APP_CSS)
+else
+BUILD_FILES += $(LIB_JS) $(LIB_CSS) $(APP_JS) $(APP_CSS)
+endif
+BUILD_FILES_MIN := $(BUILD_FILES:$(BUILD_DIR)%=$(MIN_DIR)%)
 DIST_FILES:= $(BUILD_FILES:$(BUILD_DIR)%=$(DIST_DIR)%)
 
 WATCH_FILES := '$(APP_DIR)/**/*' 'config/*' Makefile package.json
 
 APP_OUT_DIRS := $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
+APP_OUT_DIRS += \
+  $(foreach d,$(BUILD_COPY_DIST),\
+    $(dir $d) \
+    $(dir $(d:$(BUILD_DIR)/%=$(DIST_DIR)/%)) \
+    $(dir $(d:$(BUILD_DIR)/%=$(MIN_DIR)/%)))
 
 ifneq "$(strip $(filter %.js,$(DIST_FILES)))" ""
 APP_OUT_DIRS += $(APP_OUT_JS_DIR)
@@ -128,12 +149,15 @@ APP_OUT_DIRS += $(APP_OUT_FONT_DIR)
 endif
 endif
 
+APP_OUT_DIRS := $(call uniq,$(APP_OUT_DIRS))
+
 VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
-       LIB_FONTS JS_FILES CSS_FILES CSS_DEPS APP_JS APP_CSS \
-       COPY_FILES BUILD_FILES BUILD_FILES_MIN BUILD_FONTS BUILD_COPY \
-       CSS_INCLUDE_PATH DIST_FILES WATCH_FILES \
-       TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS \
-       APP_OUT_DIRS VARS_FILE
+       LIB_FONTS JS_FILES CSS_FILES CSS_DEPS \
+       APP_JS APP_CSS COPY_FILES COPY_JS_FILES COPY_CSS_FILES \
+       COPY_HTML_FILES BUILD_FILES BUILD_FILES_MIN BUILD_FONTS \
+       BUILD_COPY BUILD_COPY_JS BUILD_COPY_CSS BUILD_COPY_HTML BUILD_COPY_ALL \
+       CSS_INCLUDE_PATH DIST_FILES WATCH_FILES APP_OUT_DIRS \
+       TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
 
 TARGETS = all min watch min-watch start stop rebuild clean \
           test test-watch test-e2e test-all install vars help
@@ -148,16 +172,36 @@ LIST_NPM_SCRIPTS := $(addprefix print-,$(NPM_SCRIPTS))
 .DEFAULT_GOAL := all
 .PHONY: $(TARGETS) $(LIST_TARGETS) $(NPM_SCRIPTS) $(LIST_NPM_SCRIPTS) $(VARS)
 
+all min: $(BUILD_COPY_ALL) | $(APP_OUT_DIRS)
+
 all: $(BUILD_FILES)
+ifneq "$(strip $(APP_JS) $(LIB_JS))" ""
+	$(call prefix,[dist]     ,\
+	  $(CPDIST) $(APP_JS) $(LIB_JS) $(APP_OUT_JS_DIR))
+endif
+ifneq "$(strip $(APP_CSS) $(LIB_CSS))" ""
+	$(call prefix,[dist]     ,\
+	  $(CPDIST) $(APP_CSS) $(LIB_CSS) $(APP_OUT_CSS_DIR))
+endif
+ifneq "$(strip $(BUILD_COPY_DIST))" ""
+	$(call prefix,[dist]     ,\
+	  $(foreach f,$(BUILD_COPY_DIST),\
+	    $(CPDIST) $f $(DIST_DIR)/$(dir $(f:$(BUILD_DIR)/%=%)) &&) true)
+endif
 
 min: $(BUILD_FILES_MIN)
-
-all min: $(BUILD_COPY_ALL) | $(APP_OUT_DIRS)
-ifneq "$(strip $(APP_JS))" ""
-	$(call prefix,[dist]     ,$(CPDIST) $(filter %.js,$^) $(APP_OUT_JS_DIR))
+ifneq "$(strip $(APP_MIN_JS) $(LIB_MIN_JS))" ""
+	$(call prefix,[dist]     ,\
+	  $(CPDIST) $(APP_MIN_JS) $(LIB_MIN_JS) $(APP_OUT_JS_DIR))
 endif
-ifneq "$(strip $(APP_CSS))" ""
-	$(call prefix,[dist]     ,$(CPDIST) $(filter %.css,$^) $(APP_OUT_CSS_DIR))
+ifneq "$(strip $(APP_MIN_CSS) $(LIB_MIN_CSS))" ""
+	$(call prefix,[dist]     ,\
+	  $(CPDIST) $(APP_MIN_CSS) $(LIB_MIN_CSS) $(APP_OUT_CSS_DIR))
+endif
+ifneq "$(strip $(BUILD_COPY_DIST_MIN))" ""
+	$(call prefix,[dist]     ,\
+	  $(foreach f,$(BUILD_COPY_DIST_MIN),\
+	    $(CPDIST) $f $(DIST_DIR)/$(dir $(f:$(MIN_DIR)/%=%)) &&) true)
 endif
 
 rebuild: clean
@@ -224,12 +268,16 @@ node_modules:
 $(APP_OUT_DIRS):
 	$(call prefix,[mkdirs]   ,$(MKDIR) $@)
 
-$(MIN_DIR)/%.css: $(BUILD_DIR)/%.css | $(MIN_DIR)
+$(MIN_DIR)/%.css: $(BUILD_DIR)/%.css | $(APP_OUT_DIRS)
 	$(call prefix,[min-css]  ,$(MINCSS) -i $< -o $@)
 
-$(MIN_DIR)/%.js: $(BUILD_DIR)/%.js | $(MIN_DIR)
+$(MIN_DIR)/%.js: $(BUILD_DIR)/%.js | $(APP_OUT_DIRS)
 	$(call prefix,[min-js]   ,$(MINJS) $< -c -m >$@.tmp)
 	$(call prefix,[min-js]   ,$(MV) $@.tmp $@)
+
+$(MIN_DIR)/%.html: $(BUILD_DIR)/%.html | $(APP_OUT_DIRS)
+	$(call prefix,[min-tmpl] ,$(MINHTML) $< -o $@.tmp)
+	$(call prefix,[min-tmpl] ,$(MV) $@.tmp $@)
 
 ifeq "$(CSS_TYPE)" "scss"
 
@@ -279,6 +327,7 @@ endif
 endif
 
 $(eval $(call make-copy-target,$(BUILD_COPY),$(APP_DIR),$(DIST_DIR)))
+$(eval $(call make-copy-target,$(BUILD_COPY_DIST),$(APP_DIR),$(BUILD_DIR)))
 
 #--------
 
