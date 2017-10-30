@@ -36,7 +36,9 @@
 	},
 	"globals": {
 		"$": true,
+		"Materialize": true,
 		"APP_NAME": true,
-		"APP_DEPS": true
+		"APP_DEPS": true,
+		"define": true
 	}
 }
