@@ -7,6 +7,7 @@ include config/common.mk
 SASS = node-sass --include-path $(CSS_INCLUDE_PATH)
 LINT = eslint
 MINJS = uglifyjs
+MINJSON = node config/min-json.js
 MINCSS = csso
 MINHTML = html-minifier -c config/html-minifier.conf.json
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
@@ -105,15 +106,18 @@ APP_MIN_JS := $(APP_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
 APP_MIN_CSS := $(APP_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
 
 COPY_JS_FILES := $(filter %.js,$(COPY_FILES))
+COPY_JSON_FILES := $(filter %.json,$(COPY_FILES))
 COPY_CSS_FILES := $(filter %.css,$(COPY_FILES))
 COPY_HTML_FILES := $(filter %.html,$(COPY_FILES))
-COPY_FILES := $(filter-out %.js %.css %.html,$(COPY_FILES))
+COPY_FILES := $(filter-out %.js %.json %.css %.html,$(COPY_FILES))
 
 BUILD_COPY := $(COPY_FILES:$(APP_DIR)%=$(DIST_DIR)%)
 BUILD_COPY_JS := $(COPY_JS_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
+BUILD_COPY_JSON := $(COPY_JSON_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
 BUILD_COPY_CSS := $(COPY_CSS_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
 BUILD_COPY_HTML := $(COPY_HTML_FILES:$(APP_DIR)%=$(BUILD_DIR)%)
-BUILD_COPY_DIST := $(BUILD_COPY_JS) $(BUILD_COPY_CSS) $(BUILD_COPY_HTML)
+BUILD_COPY_DIST := $(BUILD_COPY_JS) $(BUILD_COPY_JSON) \
+                   $(BUILD_COPY_CSS) $(BUILD_COPY_HTML)
 BUILD_COPY_DIST_MIN := $(BUILD_COPY_DIST:$(BUILD_DIR)%=$(MIN_DIR)%)
 BUILD_COPY_ALL := $(BUILD_FONTS) $(BUILD_COPY) $(BUILD_COPY_DIST)
 
@@ -156,6 +160,7 @@ VARS = MAKEFILES LIB_JS_FILES LIB_JS LIB_CSS LIB_CSS_FILES LIB_CSS_DEPS \
        APP_JS APP_CSS COPY_FILES COPY_JS_FILES COPY_CSS_FILES \
        COPY_HTML_FILES BUILD_FILES BUILD_FILES_MIN BUILD_FONTS \
        BUILD_COPY BUILD_COPY_JS BUILD_COPY_CSS BUILD_COPY_HTML BUILD_COPY_ALL \
+       BUILD_COPY_DIST \
        CSS_INCLUDE_PATH DIST_FILES WATCH_FILES APP_OUT_DIRS \
        TARGETS TEST_TARGETS LIST_TARGETS NPM_SCRIPTS LIST_NPM_SCRIPTS VARS_FILE
 
@@ -274,6 +279,10 @@ $(MIN_DIR)/%.css: $(BUILD_DIR)/%.css | $(APP_OUT_DIRS)
 $(MIN_DIR)/%.js: $(BUILD_DIR)/%.js | $(APP_OUT_DIRS)
 	$(call prefix,[min-js]   ,$(MINJS) $< -c -m >$@.tmp)
 	$(call prefix,[min-js]   ,$(MV) $@.tmp $@)
+
+$(MIN_DIR)/%.json: $(BUILD_DIR)/%.json | $(APP_OUT_DIRS)
+	$(call prefix,[min-json] ,$(MINJSON) $< >$@.tmp)
+	$(call prefix,[min-json] ,$(MV) $@.tmp $@)
 
 $(MIN_DIR)/%.html: $(BUILD_DIR)/%.html | $(APP_OUT_DIRS)
 	$(call prefix,[min-tmpl] ,$(MINHTML) $< -o $@.tmp)
