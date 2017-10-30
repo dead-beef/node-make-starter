@@ -21,6 +21,7 @@ Front-end starter kit based on NodeJS and Make.
   * `./config/os.mk` - shell commands
   * `./config/app.mk` - variables
   * `./config/deps.mk` - custom targets/dependencies
+  * `./config/override.js` - override dependency package.json
 
 ## Requirements
 
