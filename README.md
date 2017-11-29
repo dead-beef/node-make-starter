@@ -1,5 +1,9 @@
 # Node Make Starter
 
+[![license](https://img.shields.io/github/license/dead-beef/node-make-starter.svg)](
+    https://github.com/dead-beef/node-make-starter/blob/master/LICENSE
+)
+
 ## Overview
 
 Front-end starter kit based on NodeJS and Make.
@@ -18,10 +22,11 @@ Front-end starter kit based on NodeJS and Make.
 * `./dist` - bundled application
 * `./tests` - unit tests
 * `./config` - configuration
-  * `./config/os.mk` - shell commands
   * `./config/app.mk` - variables
-  * `./config/deps.mk` - custom targets/dependencies
   * `./config/override.js` - override dependency package.json
+* `./make` - makefiles
+  * `./make/make-vars.js` - makefile variable generator
+  * `./make/min-json.js` - JSON minifier
 
 ## Requirements
 
@@ -71,8 +76,11 @@ make lint
 ## Server
 
 ```bash
+# start/restart
 make start
-make SERVER_IP=192.168.1.10 SERVER_PORT=1080 start
+# set ip and port
+make SERVER_IP=127.0.0.1 SERVER_PORT=1080 start
+# stop
 make stop
 ```
 
