@@ -7,9 +7,10 @@ LIB_CSS_FILES :=
 BUILD_FILES :=
 DIST_FILES :=
 TARGETS :=
-VARS := VARS_FILE MAKEFILES BUILD_FILES BUILD_FILES_MIN \
+VARS := MODULE_PATH VARS_FILE MAKEFILES BUILD_FILES BUILD_FILES_MIN \
         DIST_FILES WATCH_FILES APP_OUT_DIRS TARGETS NPM_SCRIPTS
 
 MAKEFILES := Makefile $(wildcard config/*.mk) $(wildcard make/*.mk)
 WATCH_FILES := 'config/*' 'make/*' Makefile package.json
 MODULE_DIRS := node_modules
+MODULE_PATH := $(shell $(NODE) -e 'console.log(module.paths.join(" "))')

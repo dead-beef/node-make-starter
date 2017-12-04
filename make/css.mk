@@ -7,8 +7,8 @@ ifneq "$(findstring .scss,$(CSS_FILES))" ""
 CSS_DEPS := $(CSS_FILES) $(foreach d,$(CSS_DIRS),\
                                    $(call rwildcards,$d/,*.css *.scss))
 CSS_DEPS := $(filter-out $(LIB_CSS_FILES) $(LIB_CSS_DEPS),$(CSS_DEPS))
-CSS_INCLUDE_PATH := $(call join-with,:,$(CSS_DIRS) $(MODULE_DIRS))
-
+CSS_INCLUDE_PATH := $(call join-with,:,\
+                           $(CSS_DIRS) $(MODULE_DIRS) $(MODULE_PATH))
 CSS_TYPE := scss
 else
 CSS_FILES += $(foreach d,$(CSS_DIRS),$(call rwildcards,$d/,*.css))
