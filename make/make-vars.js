@@ -6,6 +6,12 @@ const overridePackageJson = require('../config/override');
 
 const root = packpath.parent();
 
+let packDir = {};
+
+const toMakeVar = (name) => name
+	  .toUpperCase()
+	  .replace(/[^a-zA-Z_0-9]/g, '_');
+
 const getPackageJson = (pack) => {
 	let override = overridePackageJson[pack];
 	pack = require(path.join(pack, 'package.json'));
@@ -15,13 +21,23 @@ const getPackageJson = (pack) => {
 	return Object.assign({}, pack, override);
 };
 
+const resolveDir = (pack) => {
+	if(packDir[pack]) {
+		return packDir[pack];
+	}
+	let main = require.resolve(pack);
+	let packDirIndex = main.lastIndexOf(pack);
+	let packRoot = main.substr(0, packDirIndex + pack.length);
+	return packDir[pack] = path.relative(root, packRoot);
+};
+
 const resolve = (pack) => {
 	let main = require.resolve(pack);
+	let packRoot = resolveDir(pack);
 	let override = overridePackageJson[pack];
 	override = override && override.main;
 
 	if(override !== undefined) {
-		let packRoot = main.substr(0, main.indexOf(pack) + pack.length);
 		main = path.join(packRoot, override);
 	}
 
@@ -53,6 +69,8 @@ let jsDeps = getDeps(packageJson)
 	.filter((dep) => dep.endsWith('.js'));
 
 console.log('NPM_SCRIPTS :=', scripts.join(' '));
-console.log('ifeq "$(strip $(LIB_JS_FILES))" ""');
 console.log('LIB_JS_FILES :=', jsDeps.join(' '));
-console.log('endif');
+
+for(let pack in packDir) {
+	console.log('RESOLVE_' + toMakeVar(pack), ':=', packDir[pack]);
+}
