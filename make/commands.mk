@@ -10,10 +10,11 @@ CAT = cat
 TRUE = true
 RESET_MAKE = env -u MAKELEVEL -u MAKEFILES $(MAKE)
 
+NODE = node
 SASS = node-sass --include-path $(CSS_INCLUDE_PATH)
 LINT = eslint
 MINJS = uglifyjs
-MINJSON = node make/min-json.js
+MINJSON = $(NODE) make/min-json.js
 MINCSS = csso
 MINHTML = html-minifier -c config/html-minifier.conf.json
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
@@ -26,7 +27,7 @@ TEST_WATCH = karma start config/karma.conf.js
 TEST_E2E = ./e2e-test
 
 MAKE_VARS = make/make-vars.js
-MAKE_VARS_CMD = node $(MAKE_VARS)
+MAKE_VARS_CMD = $(NODE) $(MAKE_VARS)
 
 #VER := $(shell ver)
 #ifeq "$(findstring Windows, $(VER))" "Windows"
