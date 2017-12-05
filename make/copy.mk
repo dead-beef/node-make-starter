@@ -29,7 +29,12 @@ BUILD_FILES += $(BUILD_COPY_DIST)
 TARGETS += copy-files copy-min-files
 
 $(call make-copy-target,$(BUILD_COPY),$(APP_DIR),$(DIST_DIR))
-$(call make-copy-target,$(BUILD_COPY_DIST),$(APP_DIR),$(BUILD_DIR))
+$(call make-copy-js-target,$(BUILD_COPY_JS),$(APP_DIR),$(BUILD_DIR))
+$(call make-copy-target, \
+       $(BUILD_COPY_JSON) $(BUILD_COPY_CSS) $(BUILD_COPY_HTML), \
+       $(APP_DIR), \
+       $(BUILD_DIR) \
+)
 
 all min: $(BUILD_COPY_ALL)
 all: copy-files

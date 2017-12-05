@@ -31,8 +31,17 @@ endef
 
 define do-make-copy-target # (dist_files, src_dir, dist_dir)
 $(strip $1): $(strip $3)/%: $(strip $2)/%
-	$$(call prefix,copy,$(MKDIR) $$(@D))
-	$$(call prefix,copy,$(CP) $$< $$@)
+	$$(call prefix,copy,$$(MKDIR) $$(@D))
+	$$(call prefix,copy,$$(CP) $$< $$@)
+endef
+
+define do-make-copy-js-target # (dist_files, src_dir, dist_dir)
+$(strip $1): $(strip $3)/%: $(strip $2)/%
+ifneq "$(strip $(LINT_ENABLED))" ""
+	$$(call prefix,js-lint,$$(LINTJS) $$<)
+endif
+	$$(call prefix,copy,$$(MKDIR) $$(@D))
+	$$(call prefix,copy,$$(CP) $$< $$@)
 endef
 
 define make-font-target # (src-->dst)
@@ -48,3 +57,4 @@ $(call make-copy-target,$(distfiles),$(src),$(APP_OUT_FONT_DIR)/$(dst))
 endef
 
 make-copy-target = $(eval $(call do-make-copy-target,$1,$2,$3))
+make-copy-js-target = $(eval $(call do-make-copy-js-target,$1,$2,$3))
