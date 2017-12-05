@@ -2,7 +2,6 @@ include make/common.mk
 include make/commands.mk
 include make/vars.mk
 include config/app.mk
-include make/varsfile.mk
 include make/js.mk
 include make/css.mk
 include make/vendor.mk
