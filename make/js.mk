@@ -27,7 +27,7 @@ copy-app-min-js: $(APP_MIN_JS) | $(APP_OUT_JS_DIR)
 
 $(APP_JS): $(JS_FILES) | $(BUILD_DIR)
 ifneq "$(strip $(LINT_ENABLED))" ""
-	$(call prefix,js-lint,$(LINT) $?)
+	$(call prefix,js-lint,$(LINTJS) $?)
 endif
 	$(call prefix,js-cat,$(CAT) $^ >$@.tmp)
 	$(call prefix,js-cat,$(MV) $@.tmp $@)
