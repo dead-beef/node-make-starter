@@ -15,7 +15,7 @@ $(APP_OUT_DIRS):
 	$(call prefix,mkdirs,$(MKDIR) $@)
 
 $(NPM_SCRIPTS):
-	npm run $(subst -,:,$@) --silent
+	$(call prefix,npm,npm run $(subst -,:,$@) --silent)
 
 all: $(BUILD_FILES)
 min: $(BUILD_FILES_MIN)
