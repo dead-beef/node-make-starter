@@ -4,7 +4,7 @@ LIB_FONTS :=
 BUILD_FONTS :=
 LIB_JS :=
 LIB_CSS :=
-VARS += LIB_JS_FILES LIB_CSS_FILES LIB_CSS_DEPS \
+VARS += LIB_JS_FILES LIB_CSS_FILES LIB_SCSS_DEPS LIB_SCSS_MAIN \
         LIB_JS LIB_CSS LIB_MIN_JS LIB_MIN_CSS \
         LIB_FONTS BUILD_FONTS APP_OUT_FONT_DIR
 
@@ -36,7 +36,7 @@ $(LIB_JS): $(LIB_JS_FILES) | $(BUILD_DIR)
 	$(call prefix,lib-js,$(MV) $@.tmp $@)
 endif
 
-ifneq "$(strip $(LIB_CSS_FILES))" ""
+ifneq "$(strip $(LIB_CSS_FILES) $(LIB_SCSS_FILES))" ""
 LIB_CSS := $(BUILD_DIR)/$(LIB_NAME).css
 LIB_MIN_CSS := $(LIB_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
 APP_OUT_DIRS += $(APP_OUT_CSS_DIR)
@@ -52,14 +52,14 @@ copy-lib-css: $(LIB_CSS) | $(APP_OUT_CSS_DIR)
 copy-lib-min-css: $(LIB_MIN_CSS) | $(APP_OUT_CSS_DIR)
 	$(call prefix,dist,$(CPDIST) $(LIB_MIN_CSS) $(APP_OUT_CSS_DIR))
 
-ifneq "$(findstring .scss,$(LIB_CSS_FILES))" ""
-$(LIB_CSS): $(LIB_CSS_FILES) $(LIB_CSS_DEPS) | $(BUILD_DIR)
-	$(call prefix,lib-css,$(CAT) $(LIB_CSS_FILES) | $(SASS) >$@.tmp)
+ifneq "$(strip $(LIB_CSS_FILES))" ""
+$(LIB_CSS): $(LIB_CSS_FILES) | $(BUILD_DIR)
+	$(call prefix,lib-css,$(CAT) $(LIB_CSS_FILES) >$@.tmp)
 	$(call prefix,lib-css,$(MV) $@.tmp $@)
 else
-$(LIB_CSS): $(LIB_CSS_FILES) | $(BUILD_DIR)
-	$(call prefix,lib-css,$(CAT) $^ >$@.tmp)
-	$(call prefix,lib-css,$(MV) $@.tmp $@)
+$(LIB_CSS): $(LIB_SCSS_FILES) $(LIB_SCSS_DEPS) | $(BUILD_DIR)
+	$(call prefix,lib-scss,$(CAT) $(LIB_SCSS_FILES) | $(SASS) >$@.tmp)
+	$(call prefix,lib-scss,$(MV) $@.tmp $@)
 endif
 endif
 

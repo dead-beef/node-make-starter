@@ -18,11 +18,10 @@ JS_IGNORE = %.test.js
 
 JS_FILES := $(foreach d,$(JS_DIRS),$(call rwildcard,$d/,*.js))
 
-CSS_TYPE = scss
-CSS_DIRS = $(APP_DIR)/css
-CSS_FILES = $(APP_DIR)/css/main.scss
-LIB_CSS_FILES := $(APP_DIR)/css/vendor.scss
-LIB_CSS_DEPS := $(APP_DIR)/css/_materialize.scss
+SCSS_DIRS = $(APP_DIR)/css
+SCSS_FILES = $(APP_DIR)/css/main.scss
+LIB_SCSS_FILES := $(APP_DIR)/css/vendor.scss
+LIB_SCSS_DEPS := $(APP_DIR)/css/_materialize.scss
 
 COPY_DIRS := $(APP_DIR)
 COPY_FILE_TYPES = %.jpg %.jpe %.jpeg %.png %.gif %.svg %.ico %.html

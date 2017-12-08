@@ -11,7 +11,7 @@ TRUE = true
 RESET_MAKE = env -u MAKELEVEL -u MAKEFILES $(MAKE)
 
 NODE = node
-SASS = node-sass --include-path $(CSS_INCLUDE_PATH)
+SASS = node-sass --include-path $(SCSS_INCLUDE_PATH)
 LINTJS = eslint
 MINJS = uglifyjs
 MINJSON = $(NODE) make/min-json.js
