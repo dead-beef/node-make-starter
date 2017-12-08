@@ -14,7 +14,7 @@ NODE = node
 SASS = node-sass --include-path $(SCSS_INCLUDE_PATH)
 LINTJS = eslint
 MINJS = uglifyjs
-MINJSON = $(NODE) make/min-json.js
+MINJSON = $(NODE) $(MAKEFILE_DIR)/min-json.js
 MINCSS = csso
 MINHTML = html-minifier -c config/html-minifier.conf.json
 WATCH = chokidar $(WATCH_FILES) -i '**/.*' -c
@@ -26,7 +26,7 @@ TEST = karma start config/karma.conf.js --single-run
 TEST_WATCH = karma start config/karma.conf.js
 TEST_E2E = ./e2e-test
 
-MAKE_VARS = make/make-vars.js
+MAKE_VARS = $(MAKEFILE_DIR)/make-vars.js
 MAKE_VARS_CMD = $(NODE) $(MAKE_VARS)
 
 #VER := $(shell ver)

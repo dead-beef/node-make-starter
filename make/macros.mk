@@ -10,6 +10,8 @@ QUOTE2 := \"
 
 #--------
 
+load-modules = $(eval include $(addprefix $(MAKEFILE_DIR)/,$(addsuffix .mk,$1)))
+
 join-with = $(subst $(SPACE),$1,$(strip $2))
 uniq = $(if $1,$(firstword $1) $(call uniq,$(filter-out $(firstword $1),$1)))
 src-to-min = $(patsubst %.js,%.min.js,$(patsubst %.css,%.min.css,$1))

@@ -2,9 +2,9 @@ const path = require('path');
 const rootRequire = require('root-require');
 const packpath = require('packpath');
 const packageJson = rootRequire('package.json');
-const overridePackageJson = require('../config/override');
 
 const root = packpath.parent();
+const overridePackageJson = require(path.join(root, 'config/override'));
 
 let packDir = {};
 

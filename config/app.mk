@@ -1,20 +1,18 @@
-LINT_ENABLED = 1
-LIBRARY =
+LINT_ENABLED := 1
+LIBRARY :=
+LOAD_MODULES := js scss vendor minify copy test
 
-APP_NAME = app
-APP_DIR = src
+APP_NAME := app
+APP_DIR := src
 
-LIB_NAME = vendor
+LIB_NAME := vendor
 LIB_FONT_DIRS := $(RESOLVE_MATERIAL_DESIGN_ICONS_ICONFONT)/dist/fonts \
                  $(RESOLVE_MATERIALIZE_CSS)/dist/fonts/roboto
 LIB_FONT_DIST_DIRS := material-icons roboto
-LIB_FONT_TYPES = %.otf %.eot %.svg %.ttf %.woff %.woff2
-
-HTML_DIRS =
-HTML_FILES =
+LIB_FONT_TYPES := %.otf %.eot %.svg %.ttf %.woff %.woff2
 
 JS_DIRS := $(APP_DIR)/js
-JS_IGNORE = %.test.js
+JS_IGNORE := %.test.js
 
 JS_FILES := $(foreach d,$(JS_DIRS),$(call rwildcard,$d/,*.js))
 
@@ -34,4 +32,5 @@ COPY_FILES += $(foreach d,$(COPY_DIRS),\
 SERVER_IP := 127.0.0.1
 SERVER_PORT := 57005
 
-WATCH_FILES += '$(APP_DIR)/**/*'
+MAKEFILES += $(lastword $(MAKEFILE_LIST))
+WATCH_FILES += '$(APP_DIR)/**/*' '$(CONFIG_FILE)'

@@ -1,12 +1,9 @@
-include make/common.mk
-include make/commands.mk
-include make/vars.mk
-include config/app.mk
-include make/js.mk
-include make/css.mk
-include make/vendor.mk
-include make/minify.mk
-include make/copy.mk
-include make/test.mk
-include make/main.mk
-include make/info.mk
+CONFIG_FILE := config/app.mk
+MAKEFILE_DIR := make
+
+include $(MAKEFILE_DIR)/init.mk
+include $(CONFIG_FILE)
+
+LOAD_MODULES += main info
+
+$(call load-modules,$(LOAD_MODULES))
