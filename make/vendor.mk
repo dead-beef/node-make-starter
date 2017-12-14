@@ -13,7 +13,9 @@ $(foreach \
     $(join $(LIB_FONT_DIRS),$(addprefix -->,$(LIB_FONT_DIST_DIRS))),\
     $(eval $(call make-font-target,$(dirs)))\
 )
+ifeq "$(strip $(LIBRARY))" ""
 BUILD_COPY_ALL += $(BUILD_FONTS)
+endif
 
 ifneq "$(strip $(LIB_JS_FILES))" ""
 LIB_JS := $(BUILD_DIR)/$(LIB_NAME).js
@@ -21,8 +23,12 @@ LIB_MIN_JS := $(LIB_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
 
 TARGETS += copy-lib-js copy-lib-min-js
 
+ifeq "$(strip $(LIBRARY))" ""
 all: copy-lib-js
 min: copy-lib-min-js
+else
+pre-test: $(LIB_JS)
+endif
 
 copy-lib-js: $(LIB_JS) | $(APP_OUT_JS_DIR)
 	$(call prefix,dist,$(CPDIST) $(LIB_JS) $(APP_OUT_JS_DIR))
@@ -41,8 +47,12 @@ LIB_MIN_CSS := $(LIB_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
 
 TARGETS += copy-lib-css copy-lib-min-css
 
+ifeq "$(strip $(LIBRARY))" ""
 all: copy-lib-css
 min: copy-lib-min-css
+else
+pre-test: $(LIB_CSS)
+endif
 
 copy-lib-css: $(LIB_CSS) | $(APP_OUT_CSS_DIR)
 	$(call prefix,dist,$(CPDIST) $(LIB_CSS) $(APP_OUT_CSS_DIR))

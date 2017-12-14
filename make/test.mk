@@ -5,9 +5,9 @@ VARS += TEST_TARGETS
 
 #$(TEST_TARGETS): all
 
-ifneq "$(strip $(LIBRARY))" ""
-$(TEST_TARGETS): $(LIB_JS)
-endif
+pre-test:
+
+$(TEST_TARGETS): pre-test
 
 test:
 	$(call prefix,test,$(TEST))
