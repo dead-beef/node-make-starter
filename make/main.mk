@@ -4,7 +4,9 @@ DIST_FILES := $(BUILD_FILES:$(BUILD_DIR)%=$(DIST_DIR)%)
 APP_OUT_DIRS += $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
 APP_OUT_DIRS := $(call uniq,$(APP_OUT_DIRS))
 
-TARGETS += all min watch min-watch start stop rebuild clean install
+TARGETS += all min watch min-watch start stop \
+           rebuild rebuild-min rebuild-all rebuild-all-min \
+           clean clean-build install
 
 .DEFAULT_GOAL := all
 
@@ -20,14 +22,23 @@ $(NPM_SCRIPTS):
 all: $(BUILD_FILES)
 min: $(BUILD_FILES_MIN)
 
-rebuild: clean
+rebuild: clean-build
 	$(RESET_MAKE)
 
-rebuild-min: clean
+rebuild-min: clean-build
 	$(RESET_MAKE) min
 
-clean:
-	$(call prefix,clean,$(RM) $(BUILD_DIR)/* $(DIST_DIR)/*)
+rebuild-all: clean
+	$(RESET_MAKE)
+
+rebuild-all-min: clean
+	$(RESET_MAKE) min
+
+clean: clean-build
+	$(call prefix,clean,$(RM) $(DIST_DIR)/*)
+
+clean-build:
+	$(call prefix,clean,$(RM) $(BUILD_DIR)/*)
 
 watch:
 	$(call prefix,build,-$(RESET_MAKE))

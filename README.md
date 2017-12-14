@@ -44,6 +44,7 @@ make
 ```
 
 ## Building
+
 ```bash
 # single run
 make
@@ -53,9 +54,14 @@ make watch
 make min
 # continuous, minify
 make min-watch
+# rebuild
+make rebuild
+# rebuild, minify
+make rebuild-min
 ```
 
 ## Testing
+
 ```bash
 # unit, single run
 make test
