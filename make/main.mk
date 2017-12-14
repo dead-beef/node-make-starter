@@ -1,20 +1,17 @@
 BUILD_FILES_MIN := $(BUILD_FILES:$(BUILD_DIR)%=$(MIN_DIR)%)
 DIST_FILES := $(BUILD_FILES:$(BUILD_DIR)%=$(DIST_DIR)%)
 
-APP_OUT_DIRS += $(BUILD_DIR) $(DIST_DIR) $(MIN_DIR)
-APP_OUT_DIRS := $(call uniq,$(APP_OUT_DIRS))
-
 TARGETS += all min watch min-watch start stop \
            rebuild rebuild-min rebuild-all rebuild-all-min \
            clean clean-build install
 
 .DEFAULT_GOAL := all
 
+$(call make-dir-target,$(BUILD_DIR) $(DIST_DIR) $(MIN_DIR) \
+                       $(APP_OUT_JS_DIR) $(APP_OUT_CSS_DIR))
+
 $(MODULE_DIRS):
 	$(call prefix,install,$(RESET_MAKE) install)
-
-$(APP_OUT_DIRS):
-	$(call prefix,mkdirs,$(MKDIR) $@)
 
 $(NPM_SCRIPTS):
 	$(call prefix,npm,npm run $(subst -,:,$@) --silent)

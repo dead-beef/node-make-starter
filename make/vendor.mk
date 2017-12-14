@@ -18,7 +18,6 @@ BUILD_COPY_ALL += $(BUILD_FONTS)
 ifneq "$(strip $(LIB_JS_FILES))" ""
 LIB_JS := $(BUILD_DIR)/$(LIB_NAME).js
 LIB_MIN_JS := $(LIB_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
-APP_OUT_DIRS += $(APP_OUT_JS_DIR)
 
 TARGETS += copy-lib-js copy-lib-min-js
 
@@ -39,7 +38,6 @@ endif
 ifneq "$(strip $(LIB_CSS_FILES) $(LIB_SCSS_FILES))" ""
 LIB_CSS := $(BUILD_DIR)/$(LIB_NAME).css
 LIB_MIN_CSS := $(LIB_CSS:$(BUILD_DIR)%=$(MIN_DIR)%)
-APP_OUT_DIRS += $(APP_OUT_CSS_DIR)
 
 TARGETS += copy-lib-css copy-lib-min-css
 
@@ -65,7 +63,4 @@ endif
 
 ifeq "$(strip $(LIBRARY))" ""
 BUILD_FILES += $(LIB_JS) $(LIB_CSS)
-ifneq "$(strip $(LIB_FONTS))" ""
-APP_OUT_DIRS += $(APP_OUT_FONT_DIR)
-endif
 endif

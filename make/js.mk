@@ -1,4 +1,3 @@
-APP_OUT_JS_DIR := $(DIST_DIR)/js
 APP_JS :=
 JS_FILES := $(call uniq,$($(filter-out $(JS_IGNORE),JS_FILES)))
 VARS += APP_OUT_JS_DIR JS_FILES APP_JS APP_MIN_JS
@@ -6,8 +5,8 @@ VARS += APP_OUT_JS_DIR JS_FILES APP_JS APP_MIN_JS
 ifneq "$(strip $(JS_FILES))" ""
 APP_JS := $(BUILD_DIR)/$(APP_NAME).js
 APP_MIN_JS := $(APP_JS:$(BUILD_DIR)%=$(MIN_DIR)%)
-APP_OUT_DIRS += $(APP_OUT_JS_DIR)
 BUILD_FILES += $(APP_JS)
+
 #ifneq "$(strip $(LIBRARY))" ""
 JS_FILES := $(APP_DIR)/umd/umd-start.js \
             $(JS_FILES) \

@@ -14,20 +14,18 @@ BUILD_COPY_DIST := $(BUILD_COPY_JS) $(BUILD_COPY_JSON) \
 BUILD_COPY_DIST_MIN := $(BUILD_COPY_DIST:$(BUILD_DIR)%=$(MIN_DIR)%)
 BUILD_COPY_ALL += $(BUILD_COPY) $(BUILD_COPY_DIST)
 
-COPY_DIST_DIRS := $(foreach d,$(BUILD_COPY_DIST),\
-                            $(dir $(d:$(BUILD_DIR)/%=$(DIST_DIR)/%)))
-
 VARS += COPY_FILES COPY_JS_FILES COPY_CSS_FILES \
         COPY_HTML_FILES BUILD_COPY BUILD_COPY_JS BUILD_COPY_CSS \
         BUILD_COPY_HTML BUILD_COPY_DIST BUILD_COPY_ALL
-
-APP_OUT_DIRS += $(COPY_DIST_DIRS)
-
 
 ifneq "$(strip $(BUILD_COPY_DIST))" ""
 BUILD_FILES += $(BUILD_COPY_DIST)
 TARGETS += copy-files copy-min-files
 
+COPY_DIST_DIRS := $(call get-dirs,\
+                         $(BUILD_COPY_DIST:$(BUILD_DIR)/%=$(DIST_DIR)/%))
+
+$(call make-dir-targets,$(COPY_DIST_DIRS))
 $(call make-copy-target,$(BUILD_COPY),$(APP_DIR),$(DIST_DIR))
 $(call make-copy-js-target,$(BUILD_COPY_JS),$(APP_DIR),$(BUILD_DIR))
 $(call make-copy-target, \
