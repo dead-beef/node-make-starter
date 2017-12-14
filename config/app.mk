@@ -1,6 +1,6 @@
 LINT_ENABLED := 1
 LIBRARY :=
-LOAD_MODULES := js scss vendor minify copy test
+LOAD_MODULES := js scss vendor
 
 APP_NAME := app
 APP_DIR := src
@@ -13,7 +13,6 @@ LIB_FONT_TYPES := %.otf %.eot %.svg %.ttf %.woff %.woff2
 
 JS_DIRS := $(APP_DIR)/js
 JS_IGNORE := %.test.js
-
 JS_FILES := $(foreach d,$(JS_DIRS),$(call rwildcard,$d/,*.js))
 
 SCSS_DIRS = $(APP_DIR)/css
