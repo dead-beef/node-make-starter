@@ -22,11 +22,7 @@ Front-end starter kit based on NodeJS and Make.
 * `./dist` - bundled application
 * `./tests` - unit tests
 * `./config` - configuration
-  * `./config/app.mk` - variables
-  * `./config/override.js` - override dependency package.json
-* `./make` - makefiles
-  * `./make/make-vars.js` - makefile variable generator
-  * `./make/min-json.js` - JSON minifier
+* `./make` - [makefiles](https://github.com/dead-beef/frontend-makediles)
 
 ## Requirements
 
@@ -38,7 +34,7 @@ Front-end starter kit based on NodeJS and Make.
 ## Installation
 
 ```
-git clone https://github.com/dead-beef/node-make-starter.git
+git clone --recursive https://github.com/dead-beef/node-make-starter.git
 cd node-make-starter
 make
 ```
