@@ -1,9 +1,4 @@
 CONFIG_FILE := config/app.mk
-MAKEFILE_DIR := make
+OVERRIDE_CONFIG_FILE := config/override.js
 
-include $(MAKEFILE_DIR)/init.mk
-include $(CONFIG_FILE)
-
-LOAD_MODULES += copy test minify main info
-
-$(call load-modules,$(LOAD_MODULES))
+include make/Makefile
