@@ -4,13 +4,10 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 charset = utf-8
-
-[*.{css,scss,js,json,sh}]
 indent_style = tab
 indent_size = 4
 
 [*.html]
-indent_style = tab
 indent_size = 2
 
 [package.json]
