@@ -1,0 +1,24 @@
+@import "mixins";
+@import "layout";
+@import "materialize";
+
+body {
+	@include flex((flex-direction: column));
+	min-height: 100vh;
+	& > main {
+		&, & > .section {
+			@include flex((
+				flex-grow: 1,
+				flex-shrink: 0,
+				flex-basis: auto
+			));
+			max-width: 100%;
+		}
+	}
+	& > footer {
+		@extend .flex;
+		& > div {
+			@extend .fill-width;
+		}
+	}
+}

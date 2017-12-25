@@ -1,3 +1,5 @@
+@import "materialize-css/sass/components/color";
+
 $roboto-font-path: "../fonts/roboto/";
 
 $primary-color: color("teal", "base");
@@ -8,3 +10,11 @@ $secondary-color: color("teal", "darken-3");
 $success-color: color("green", "base");
 $error-color: color("red", "base");
 $link-color: color("light-blue", "darken-1");
+
+.primary {
+	background-color: $primary-color;
+}
+
+.primary-text {
+	color: $primary-color;
+}
