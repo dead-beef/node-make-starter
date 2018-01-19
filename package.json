@@ -13,25 +13,25 @@
   "dependencies": {
     "jquery": "^3.2.1",
     "material-design-icons-iconfont": "^3.0.3",
-    "materialize-css": "^0.99.0"
+    "materialize-css": "^0.100.2"
   },
   "devDependencies": {
     "chokidar-cli": "^1.2.0",
     "csso-cli": "^1.0.0",
-    "eslint": "^4.2.0",
-    "html-minifier": "^3.5.3",
-    "http-server": "^0.10.0",
-    "jasmine-core": "^2.6.4",
+    "eslint": "^4.15.0",
+    "html-minifier": "^3.5.8",
+    "http-server": "^0.11.1",
+    "jasmine-core": "^2.9.0",
     "jasmine-jquery": "^2.1.1",
     "jasmine-spec-reporter": "^4.1.1",
-    "karma": "^1.7.0",
+    "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-jasmine": "^1.1.0",
-    "karma-spec-reporter": "0.0.31",
-    "node-sass": "^4.5.3",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-spec-reporter": "0.0.32",
+    "node-sass": "^4.7.2",
     "sass-makedepend": "^0.1.0",
-    "uglify-js": "^3.0.25"
+    "uglify-js": "^3.3.7"
   },
   "scripts": {
     "lint": "eslint src tests"
