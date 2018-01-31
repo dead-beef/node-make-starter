@@ -1,6 +1,7 @@
 module.exports = (config) => {
 	const fs = require('fs');
 
+	let app = './dist/js/app.js';
 	let vendor = './dist/js/vendor.js';
 	if(!fs.existsSync(vendor)) {
 		vendor = './build/vendor.js';
@@ -12,20 +13,15 @@ module.exports = (config) => {
 			pattern: require.resolve('jasmine-jquery'),
 			watched: false,
 			served: true
-		}
+		},
+		/*{
+			pattern: './dist/js/*.map',
+			included: false,
+			served: true
+		},*/
+		app,
+		'./tests/**/*.test.js'
 	];
-
-	if(process.env.TEST_BUNDLE) {
-		files.push('./dist/js/app.js');
-	}
-	else {
-		files.push.apply(files, [
-			'./tests/test-start.js',
-			'./src/js/**/*.js'
-		]);
-	}
-
-	files.push('./tests/**/*.test.js');
 
 	let browsers = process.env.TEST_BROWSERS;
 	if(browsers) {
@@ -39,6 +35,9 @@ module.exports = (config) => {
 		basePath: '../',
 
 		files: files,
+		preprocessors: {
+			'**/*.js': ['sourcemap']
+		},
 
 		frameworks: ['jasmine'],
 
