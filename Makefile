@@ -2,6 +2,7 @@ OVERRIDE_CONFIG_FILE := config/override.js
 include make/Makefile
 
 LINT_ENABLED := 1
+SOURCE_MAP_ENABLED :=
 
 APP_NAME := app
 VENDOR_NAME := vendor
@@ -22,17 +23,25 @@ MAKEFILES += $(lastword $(MAKEFILE_LIST))
 TARGETS += start stop watch min-watch
 TEST_TARGETS := test test-watch test-e2e
 
+ifneq "$(strip $(SOURCE_MAP_ENABLED))" ""
+JS_BUILD_COMMAND := SOURCE_MAP_CONCAT
+JS_MIN_COMMAND := SOURCE_MAP_UGLIFY
+else
+JS_BUILD_COMMAND := CONCAT
+JS_MIN_COMMAND := UGLIFYJS
+endif
+
 $(call build-and-minify,\
     $(JS_FILES),\
     $(BUILD_DIR)/js/$(APP_NAME).js,\
     $(MIN_DIR)/js/$(APP_NAME).js,\
-    SOURCE_MAP_CONCAT,SOURCE_MAP_UGLIFY,ESLINT)
+    $(JS_BUILD_COMMAND),$(JS_MIN_COMMAND),ESLINT)
 
 $(call build-and-minify,\
     $(VENDOR_JS_FILES),\
     $(BUILD_DIR)/js/$(VENDOR_NAME).js,\
     $(MIN_DIR)/js/$(VENDOR_NAME).js,\
-    SOURCE_MAP_CONCAT,SOURCE_MAP_UGLIFY)
+    $(JS_BUILD_COMMAND),$(JS_MIN_COMMAND))
 
 $(call build-and-minify,\
     $(APP_DIR)/css/$(APP_NAME).scss,\
