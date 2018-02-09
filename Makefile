@@ -31,6 +31,8 @@ JS_BUILD_COMMAND := CONCAT
 JS_MIN_COMMAND := UGLIFYJS
 endif
 
+$(call build-wildcards,*.slm,$(APP_DIR),$(DIST_DIR),.slm,.html,SLM)
+
 $(call build-and-minify,\
     $(JS_FILES),\
     $(BUILD_DIR)/js/$(APP_NAME).js,\
